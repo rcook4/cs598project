@@ -34,7 +34,6 @@ SELECT
             ELSE date_add('minute', actualelapsedtime, date_add('minute', depdelay, date_parse(concat(flightdate,crsdeptime), '%Y-%m-%d%H%i')))
        END as arr_ts
       ,CAST(arrdel15 AS TINYINT) as arrdel15
-      ,CAST(dayofweek AS TINYINT) as dayofweek
       ,year
 FROM scrubbed
 WHERE (diverted = 0 or diverted is null)
