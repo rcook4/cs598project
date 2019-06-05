@@ -1,4 +1,4 @@
-CREATE EXTERNAL scrubbed (
+CREATE EXTERNAL TABLE scrubbed (
   year bigint,
   quarter bigint,
   month bigint,
