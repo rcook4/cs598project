@@ -9,7 +9,6 @@ AS
 SELECT
        date_parse(flightdate,'%Y-%m-%d') flight_ts
       ,uniquecarrier
-      ,carrier
       ,flightnum
       ,origin
       ,dest
@@ -23,7 +22,7 @@ SELECT
             THEN date_add('minute', depdelay, date_parse(concat(flightdate,'235959'), '%Y-%m-%d%H%i%s'))
             ELSE date_add('minute', depdelay, date_parse(concat(flightdate,crsdeptime), '%Y-%m-%d%H%i'))
        END as dep_ts
-      ,depdel15
+      ,CAST(depdel15 as TINYINT) as depdel15
       ,CASE
             WHEN crsdeptime='2400'
             THEN date_add('minute', crselapsedtime, date_parse(concat(flightdate,'235959'), '%Y-%m-%d%H%i%s'))
@@ -34,9 +33,9 @@ SELECT
             THEN date_add('minute', actualelapsedtime, date_add('minute', depdelay, date_parse(concat(flightdate,'235959'), '%Y-%m-%d%H%i%s')))
             ELSE date_add('minute', actualelapsedtime, date_add('minute', depdelay, date_parse(concat(flightdate,crsdeptime), '%Y-%m-%d%H%i')))
        END as arr_ts
-      ,arrdel15
-      ,dayofweek
+      ,CAST(arrdel15 AS TINYINT) as arrdel15
+      ,CAST(dayofweek AS TINYINT) as dayofweek
       ,year
-FROM "cs598athena"."scrubbed"
+FROM scrubbed
 WHERE (diverted = 0 or diverted is null)
 AND (cancelled = 0 or cancelled is null);
