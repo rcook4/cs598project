@@ -2,7 +2,7 @@ CREATE TABLE missions
 WITH (
        format = 'TEXTFILE'
       ,field_delimiter = ','
-      ,external_location = 's3://cs598project/derived/missions/'
+      ,external_location = 's3://cs598project/data/derived/missions/'
       ,partitioned_by = ARRAY['LAUNCH_DAY']
       ,bucketed_by = ARRAY['LAUNCH_MONTH']
       ,bucket_count = 12
