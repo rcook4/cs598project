@@ -2,9 +2,9 @@ CREATE TABLE missions
 WITH (
        format = 'TEXTFILE'
       ,field_delimiter = ','
-      ,external_location = 's3://cs598project/answers/missions/'
-      ,partitioned_by = ARRAY['LAND_DAY']
-      ,bucketed_by = ARRAY['LAND_MONTH']
+      ,external_location = 's3://cs598project/derived/missions/'
+      ,partitioned_by = ARRAY['LAUNCH_DAY']
+      ,bucketed_by = ARRAY['LAUNCH_MONTH']
       ,bucket_count = 12
 )
 AS
@@ -18,8 +18,8 @@ SELECT
       ,LAND
       ,LAND_EARLIEST
       ,LAND_LATEST
-      ,month(LAUNCH_EARLIEST) AS LAND_MONTH
-      ,day(LAUNCH_EARLIEST) AS LAND_DAY
+      ,month(LAUNCH_EARLIEST) AS LAUNCH_MONTH
+      ,day(LAUNCH_EARLIEST) AS LAUNCH_DAY
 FROM
 (
       select distinct origin as LAUNCH, dest as RENDEZVOUS, date_add('second', 0, flight_ts) as LAUNCH_EARLIEST, date_add('second', 0+43199, flight_ts) as LAUNCH_LATEST from completed where year(flight_ts) = 2008 and hour(crsdep_ts) < 12
