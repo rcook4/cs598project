@@ -10,7 +10,7 @@ WITH (
 AS
 SELECT
        2008 AS YEAR
-      ,concat(LAUNCH, ' => ', LANDING.RENDEZVOUS, ' => ', LAND, '(', date_format(LAUNCH_EARLIEST, '%d/%m/%Y'), ')') AS NAME
+      ,concat(LAUNCH, ' => ', LANDING.RENDEZVOUS, ' => ', LAND, ' (', date_format(LAUNCH_EARLIEST, '%d/%m/%Y'), ')') AS NAME
       ,LAUNCH
       ,LAUNCH_EARLIEST
       ,LAUNCH_LATEST
