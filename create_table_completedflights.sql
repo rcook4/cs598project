@@ -1,9 +1,10 @@
 CREATE TABLE completedflights
 WITH
 (
-     format = 'TEXTFILE',  
-     external_location = 's3://cs598project/data/derived/completedflights/',
-     partitioned_by = ARRAY['year']
+      format = 'TEXTFILE'
+     ,field_delimiter = ','
+     ,external_location = 's3://cs598project/data/derived/completedflights/'
+     ,partitioned_by = ARRAY['year']
 ) 
 AS
 SELECT
