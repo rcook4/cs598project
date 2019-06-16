@@ -1,3 +1,4 @@
+/*runtime evidence*/
 CREATE TABLE g3q1
 WITH
 (
@@ -42,5 +43,5 @@ CROSS JOIN
 				select dest as airport, count(*) as trips from completedflights group by 1
 		  ) as flights
 		  group by 1
-	  )
+	  ) AS aggregation
 ) AS stats;
