@@ -1,3 +1,4 @@
+/*runtime evidence*/
 CREATE TABLE g2q3
 WITH
 (
@@ -20,7 +21,6 @@ FROM
             OR origin = 'JFK' AND dest = 'LAX'
             OR origin = 'ATL' AND dest = 'PHX'
             GROUP BY 1, 2, 3
-      )
-)
-WHERE arrival_performance_rank <= 10
-ORDER BY 2, 3, 6;
+      ) AS performance
+) AS g2q3
+WHERE arrival_performance_rank <= 10;
