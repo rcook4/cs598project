@@ -22,11 +22,11 @@ SELECT
       ,day(LAUNCH_EARLIEST) AS LAUNCH_DAY
 FROM
 (
-      select distinct origin as LAUNCH, dest as RENDEZVOUS, date_add('second', 0, flight_ts) as LAUNCH_EARLIEST, date_add('second', 0+43199, flight_ts) as LAUNCH_LATEST from completed where year(flight_ts) = 2008 and hour(crsdep_ts) < 12
+      select distinct origin as LAUNCH, dest as RENDEZVOUS, date_add('second', 0, flight_ts) as LAUNCH_EARLIEST, date_add('second', 0+43199, flight_ts) as LAUNCH_LATEST from completedflights where year(flight_ts) = 2008 and hour(crsdep_ts) < 12
 ) AS LAUNCHING
 JOIN
 (
-      select distinct origin as RENDEZVOUS, dest as LAND, date_add('second', 43200, flight_ts) as LAND_EARLIEST, date_add('second', 43200+43199, flight_ts) as LAND_LATEST from completed where year(flight_ts) = 2008 and hour(crsarr_ts) >= 12
+      select distinct origin as RENDEZVOUS, dest as LAND, date_add('second', 43200, flight_ts) as LAND_EARLIEST, date_add('second', 43200+43199, flight_ts) as LAND_LATEST from completedflights where year(flight_ts) = 2008 and hour(crsarr_ts) >= 12
 ) as LANDING
 ON LAUNCHING.RENDEZVOUS = LANDING.RENDEZVOUS
 AND date_diff('day', LAUNCH_EARLIEST, LAND_EARLIEST) = 2
