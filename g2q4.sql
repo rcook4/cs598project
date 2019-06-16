@@ -1,3 +1,4 @@
+/*runtime evidence*/
 CREATE TABLE g2q4
 WITH
 (
@@ -13,5 +14,4 @@ OR origin = 'DFW' AND dest = 'IAH'
 OR origin = 'LAX' AND dest = 'SFO'
 OR origin = 'JFK' AND dest = 'LAX'
 OR origin = 'ATL' AND dest = 'PHX'
-GROUP BY 2, 3
-ORDER BY 4;
+GROUP BY 2, 3;
