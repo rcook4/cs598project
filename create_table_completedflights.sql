@@ -1,3 +1,4 @@
+/*runtime evidence*/
 CREATE TABLE completedflights
 WITH
 (
