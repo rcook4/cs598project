@@ -1,3 +1,4 @@
+/*runtime evidence*/
 CREATE EXTERNAL TABLE scrubbed (
   year bigint,
   quarter bigint,
