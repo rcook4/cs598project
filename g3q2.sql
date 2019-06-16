@@ -1,120 +1,58 @@
+/*runtime evidence*/
 CREATE TABLE g3q2
 WITH
 (
-     format = 'JSON',  
-     external_location = 's3://cs598project/answers/g3q2/'
+       format = 'TEXTFILE'
+      ,field_delimiter = ','
+      ,external_location = 's3://cs598project/answers/g3q2/'
+      ,partitioned_by = ARRAY['LAUNCH_DAY']
 ) 
 AS
-with MISSION as (
-      SELECT
-             1 AS ID
-            ,'CMI => ORD => LAX, 04/03/2008' AS NAME
-            ,'CMI' AS LAUNCH
-            ,'ORD' AS RENDEZVOUS
-            ,'LAX' AS LANDING
-            ,2008 AS YEAR
-            ,date_parse('2008-03-04 00:00:00', '%Y-%m-%d %H:%i:%s') AS LAUNCH_EARLIEST
-            ,date_parse('2008-03-04 11:59:59', '%Y-%m-%d %H:%i:%s') AS LAUNCH_LATEST
-            ,date_parse('2008-03-06 12:00:00', '%Y-%m-%d %H:%i:%s') AS LANDING_EARLIEST
-            ,date_parse('2008-03-06 23:59:59', '%Y-%m-%d %H:%i:%s') AS LANDING_LATEST
-      UNION ALL
-      SELECT
-             2 AS ID
-            , 'JAX => DFW => CRP, 09/09/2008' AS NAME
-            ,'JAX' AS LAUNCH
-            ,'DFW' AS RENDEZVOUS
-            ,'CRP' AS LANDING
-            ,2008 AS YEAR
-            ,date_parse('2008-09-09 00:00:00', '%Y-%m-%d %H:%i:%s') AS LAUNCH_EARLIEST
-            ,date_parse('2008-09-09 11:59:59', '%Y-%m-%d %H:%i:%s') AS LAUNCH_LATEST
-            ,date_parse('2008-09-11 12:00:00', '%Y-%m-%d %H:%i:%s') AS LANDING_EARLIEST
-            ,date_parse('2008-09-11 23:59:59', '%Y-%m-%d %H:%i:%s') AS LANDING_LATEST
-      UNION ALL
-      SELECT
-             3 AS ID
-            ,'SLC => BFL => LAX, 01/04/2008' AS NAME
-            ,'SLC' AS LAUNCH
-            ,'BFL' AS RENDEZVOUS
-            ,'LAX' AS LANDING
-            ,2008 AS YEAR
-            ,date_parse('2008-04-01 00:00:00', '%Y-%m-%d %H:%i:%s') AS LAUNCH_EARLIEST
-            ,date_parse('2008-04-01 11:59:59', '%Y-%m-%d %H:%i:%s') AS LAUNCH_LATEST
-            ,date_parse('2008-04-03 12:00:00', '%Y-%m-%d %H:%i:%s') AS LANDING_EARLIEST
-            ,date_parse('2008-04-03 23:59:59', '%Y-%m-%d %H:%i:%s') AS LANDING_LATEST
-      UNION ALL
-      SELECT
-             4 AS ID
-            ,'LAX => SFO => PHX, 12/07/2008' AS NAME
-            ,'LAX' AS LAUNCH
-            ,'SFO' AS RENDEZVOUS
-            ,'PHX' AS LANDING
-            ,2008 AS YEAR
-            ,date_parse('2008-07-12 00:00:00', '%Y-%m-%d %H:%i:%s') AS LAUNCH_EARLIEST
-            ,date_parse('2008-07-12 11:59:59', '%Y-%m-%d %H:%i:%s') AS LAUNCH_LATEST
-            ,date_parse('2008-07-14 12:00:00', '%Y-%m-%d %H:%i:%s') AS LANDING_EARLIEST
-            ,date_parse('2008-07-14 23:59:59', '%Y-%m-%d %H:%i:%s') AS LANDING_LATEST
-      UNION ALL
-      SELECT
-             5 AS ID
-            ,'DFW => ORD => DFW, 10/06/2008' AS NAME
-            ,'DFW' AS LAUNCH
-            ,'ORD' AS RENDEZVOUS
-            ,'DFW' AS LANDING
-            ,2008 AS YEAR
-            ,date_parse('2008-06-10 00:00:00', '%Y-%m-%d %H:%i:%s') AS LAUNCH_EARLIEST
-            ,date_parse('2008-06-10 11:59:59', '%Y-%m-%d %H:%i:%s') AS LAUNCH_LATEST
-            ,date_parse('2008-06-12 12:00:00', '%Y-%m-%d %H:%i:%s') AS LANDING_EARLIEST
-            ,date_parse('2008-06-12 23:59:59', '%Y-%m-%d %H:%i:%s') AS LANDING_LATEST
-      UNION ALL
-      SELECT
-             6 AS ID
-            ,'LAX => ORD => JFK, 01/01/2008' AS NAME
-            ,'LAX' AS LAUNCH
-            ,'ORD' AS RENDEZVOUS
-            ,'JFK' AS LANDING
-            ,2008 AS YEAR
-            ,date_parse('2008-01-01 00:00:00', '%Y-%m-%d %H:%i:%s') AS LAUNCH_EARLIEST
-            ,date_parse('2008-01-01 11:59:59', '%Y-%m-%d %H:%i:%s') AS LAUNCH_LATEST
-            ,date_parse('2008-01-03 12:00:00', '%Y-%m-%d %H:%i:%s') AS LANDING_EARLIEST
-            ,date_parse('2008-01-03 23:59:59', '%Y-%m-%d %H:%i:%s') AS LANDING_LATEST
-)
-
 SELECT
-       ID
-      ,NAME as mission
-      ,launch_flight
+       NAME as mission
+      ,launching_flight
       ,scheduled_launch
       ,landing_flight
       ,scheduled_landing
       ,total_mission_delayed_minutes
+      ,LAUNCH_DAY
 FROM
 (
-      SELECT ID, NAME, launch_flight, scheduled_launch, landing_flight, scheduled_landing, total_mission_delayed_minutes, RANK() OVER (PARTITION BY ID ORDER BY total_mission_delayed_minutes ASC) AS route_best_match_rank
+      SELECT
+             NAME
+            ,launching_flight
+            ,scheduled_launch
+            ,landing_flight
+            ,scheduled_landing
+            ,total_mission_delayed_minutes
+            ,RANK() OVER (PARTITION BY NAME ORDER BY total_mission_delayed_minutes ASC) AS route_best_match_rank
+            ,LAUNCH_DAY
       FROM
       (
-            SELECT MISSION.ID, MISSION.NAME, concat(LAUNCH.uniquecarrier, ' ', LAUNCH.flightnum) AS launch_flight, LAUNCH.crsdep_ts AS scheduled_launch, concat(LANDING.uniquecarrier, ' ', LANDING.flightnum) as landing_flight, LANDING.crsarr_ts AS scheduled_landing, (LAUNCH.delay_minutes + LANDING.delay_minutes) as total_mission_delayed_minutes
-            FROM MISSION
-            JOIN
-            (
-                  SELECT MISSION.ID, uniquecarrier, flightnum, origin, dest, crsdep_ts, date_diff('minute', crsarr_ts, arr_ts) as delay_minutes
-                  FROM MISSION
-                  JOIN completedflights
-                  ON completedflights.year=MISSION.YEAR
-                  AND completedflights.origin = MISSION.LAUNCH
-                  AND completedflights.dest = MISSION.RENDEZVOUS
-                  AND completedflights.crsdep_ts BETWEEN MISSION.LAUNCH_EARLIEST AND MISSION.LAUNCH_LATEST
-            ) AS LAUNCH ON LAUNCH.ID = MISSION.ID
-            JOIN
-            (
-                  SELECT MISSION.ID, uniquecarrier, flightnum, origin, dest, crsarr_ts, date_diff('minute', crsarr_ts, arr_ts) as delay_minutes
-                  FROM MISSION
-                  JOIN completedflights
-                  ON completedflights.year=MISSION.YEAR
-                  AND completedflights.origin = MISSION.RENDEZVOUS
-                  AND completedflights.dest = MISSION.LANDING
-                  AND completedflights.crsdep_ts BETWEEN MISSION.LANDING_EARLIEST AND MISSION.LANDING_LATEST
-            ) AS LANDING ON LANDING.ID = MISSION.ID
+            SELECT
+                   MISSIONS.NAME
+                  ,concat(LAUNCHING.uniquecarrier, ' ', LAUNCHING.flightnum) AS launching_flight
+                  ,LAUNCHING.crsdep_ts AS scheduled_launch
+                  ,concat(LANDING.uniquecarrier, ' ', LANDING.flightnum) as landing_flight
+                  ,LANDING.crsarr_ts AS scheduled_landing
+                  ,(date_diff('minute', LAUNCHING.crsarr_ts, LAUNCHING.arr_ts) + date_diff('minute', LANDING.crsarr_ts, LANDING.arr_ts)) as total_mission_delayed_minutes
+                  ,LAUNCH_DAY
+            FROM MISSIONS
+            JOIN completedflights AS LAUNCHING
+                  ON  LAUNCHING.year = 2008
+                  AND LAUNCHING.year = MISSIONS.YEAR
+                  AND LAUNCHING.origin = MISSIONS.LAUNCH
+                  AND LAUNCHING.dest = MISSIONS.RENDEZVOUS
+                  AND LAUNCHING.crsdep_ts BETWEEN MISSIONS.LAUNCH_EARLIEST AND MISSIONS.LAUNCH_LATEST
+                  AND day(LAUNCHING.crsdep_ts) = MISSIONS.LAUNCH_DAY
+            JOIN completedflights AS LANDING
+                  ON  LANDING.year = 2008
+                  AND LANDING.year = MISSIONS.YEAR
+                  AND LANDING.origin = MISSIONS.RENDEZVOUS
+                  AND LANDING.dest = MISSIONS.LAND
+                  AND LANDING.crsarr_ts BETWEEN MISSIONS.LAND_EARLIEST AND MISSIONS.LAND_LATEST
+                  AND day(date_add('day', -2, LANDING.crsarr_ts)) = MISSIONS.LAUNCH_DAY
+            /*WHERE NAME IN ('CMI => ORD => LAX (04/03/2008)','JAX => DFW => CRP (09/09/2008)','SLC => BFL => LAX (01/04/2008)','LAX => SFO => PHX (12/07/2008)','DFW => ORD => DFW (10/06/2008)','LAX => ORD => JFK (01/01/2008)')*/
       ) AS MISSION_ROUTES
 ) AS MISSION_RESULT
-WHERE route_best_match_rank = 1
-ORDER BY 1;
+WHERE route_best_match_rank = 1;
