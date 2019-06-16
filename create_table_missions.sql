@@ -1,3 +1,4 @@
+/*runtime evidence*/
 CREATE TABLE missions
 WITH (
        format = 'TEXTFILE'
