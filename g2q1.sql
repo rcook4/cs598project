@@ -1,3 +1,4 @@
+/*runtime evidence*/
 CREATE TABLE g2q1
 WITH
 (
@@ -15,7 +16,6 @@ FROM
             FROM completedflights
             WHERE origin IN ('CMI','BWI','MIA','LAX','IAH','SFO')
             GROUP BY 1, 2
-      )
-)
-WHERE departure_performance_rank <= 10
-ORDER BY 2, 5;
+      ) AS performance
+) AS g2q1
+WHERE departure_performance_rank <= 10;
