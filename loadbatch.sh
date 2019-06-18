@@ -1,6 +1,4 @@
 sudo cat $2 | tr -d '\n' > $2.json
-sudo chown root:ec2-user $2.json
-sudo chmod 777 $2.json
 sed -i 's/{/{"PutRequest":{"Item":{/g' $2.json
 sed -i 's/}/}}},/g' $2.json
 sed -i 's/":/":~/g' $2.json
