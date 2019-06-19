@@ -1,4 +1,4 @@
-/*runtime evidence*/
+/*timings*/
 CREATE TABLE g1q1
 WITH
 (
