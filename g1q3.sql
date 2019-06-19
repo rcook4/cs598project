@@ -1,4 +1,4 @@
-/*runtime evidence*/
+/*timings*/
 CREATE TABLE g1q3
 WITH
 (
@@ -13,4 +13,4 @@ FROM
       from completedflights
       group by 1
       order by 2 ASC
-) AS g3q1;
+) AS g1q3;
