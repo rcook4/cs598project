@@ -1,4 +1,4 @@
-/*runtime evidence*/
+/*timings*/
 CREATE EXTERNAL TABLE scrubbed (
   year bigint,
   quarter bigint,
