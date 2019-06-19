@@ -1,4 +1,4 @@
-/*runtime evidence*/
+/*timings*/
 CREATE TABLE g3q2
 WITH
 (
@@ -52,7 +52,7 @@ FROM
                   AND LANDING.dest = MISSIONS.LAND
                   AND LANDING.crsarr_ts BETWEEN MISSIONS.LAND_EARLIEST AND MISSIONS.LAND_LATEST
                   AND day(date_add('day', -2, LANDING.crsarr_ts)) = MISSIONS.LAUNCH_DAY
-            /*WHERE NAME IN ('CMI => ORD => LAX (04/03/2008)','JAX => DFW => CRP (09/09/2008)','SLC => BFL => LAX (01/04/2008)','LAX => SFO => PHX (12/07/2008)','DFW => ORD => DFW (10/06/2008)','LAX => ORD => JFK (01/01/2008)')*/
+/*            WHERE NAME IN ('CMI => ORD => LAX (04/03/2008)','JAX => DFW => CRP (09/09/2008)','SLC => BFL => LAX (01/04/2008)','LAX => SFO => PHX (12/07/2008)','DFW => ORD => DFW (10/06/2008)','LAX => ORD => JFK (01/01/2008)') */
       ) AS MISSION_ROUTES
 ) AS MISSION_RESULT
 WHERE route_best_match_rank = 1;
