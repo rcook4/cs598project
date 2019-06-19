@@ -1,4 +1,4 @@
-/*runtime evidence*/
+/*timings*/
 CREATE TABLE g2q3
 WITH
 (
@@ -14,12 +14,14 @@ FROM
       (
             SELECT origin, dest, uniquecarrier, ROUND(100.0*SUM(arrdel15)/COUNT(*), 2) AS fifteen_minutes_late_percentage
             FROM completedflights
+/*
             WHERE origin = 'CMI' AND dest = 'ORD'
             OR origin = 'IND' AND dest = 'CMH'
             OR origin = 'DFW' AND dest = 'IAH'
             OR origin = 'LAX' AND dest = 'SFO'
             OR origin = 'JFK' AND dest = 'LAX'
             OR origin = 'ATL' AND dest = 'PHX'
+*/
             GROUP BY 1, 2, 3
       ) AS performance
 ) AS g2q3
