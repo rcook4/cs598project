@@ -1,4 +1,4 @@
-/*runtime evidence*/
+/*timings*/
 CREATE TABLE missions
 WITH (
        format = 'TEXTFILE'
@@ -30,4 +30,4 @@ JOIN
       select distinct origin as RENDEZVOUS, dest as LAND, date_add('second', 43200, flight_ts) as LAND_EARLIEST, date_add('second', 43200+43199, flight_ts) as LAND_LATEST from completedflights where year(flight_ts) = 2008 and hour(crsarr_ts) >= 12
 ) as LANDING
 ON LAUNCHING.RENDEZVOUS = LANDING.RENDEZVOUS
-AND date_diff('day', LAUNCH_EARLIEST, LAND_EARLIEST) = 2
+AND date_diff('day', LAUNCH_EARLIEST, LAND_EARLIEST) = 2;
