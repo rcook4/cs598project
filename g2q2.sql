@@ -6,7 +6,7 @@ WITH
      external_location = 's3://cs598project/answers/g2q2/'
 ) 
 AS
-SELECT concat(origin, ':', dest) AS airport_destination, origin AS airport, dest AS destination, fifteen_minutes_late_percentage, departure_performance_rank AS airport_destination_best_departure_performance_rank
+SELECT origin AS airport, dest AS destination, fifteen_minutes_late_percentage, departure_performance_rank AS airport_destination_best_departure_performance_rank
 FROM
 (
       SELECT origin, dest, RANK() OVER (PARTITION BY origin ORDER BY fifteen_minutes_late_percentage ASC) as departure_performance_rank, fifteen_minutes_late_percentage
