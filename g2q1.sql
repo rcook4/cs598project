@@ -9,7 +9,7 @@ AS
 SELECT origin as airport, uniquecarrier as airline, fifteen_minutes_late_percentage, departure_performance_rank AS airport_airline_best_departure_performance_rank
 FROM
 (
-      SELECT origin, uniquecarrier, RANK() OVER (PARTITION BY origin ORDER BY fifteen_minutes_late_percentage ASC) as departure_performance_rank, fifteen_minutes_late_percentage
+      SELECT origin, uniquecarrier, DENSE_RANK() OVER (PARTITION BY origin ORDER BY fifteen_minutes_late_percentage ASC) as departure_performance_rank, fifteen_minutes_late_percentage
       FROM
       (
             SELECT origin, uniquecarrier, ROUND(100.0*SUM(depdel15)/COUNT(*), 2) AS fifteen_minutes_late_percentage
