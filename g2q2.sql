@@ -9,7 +9,7 @@ AS
 SELECT origin AS airport, dest AS destination, fifteen_minutes_late_percentage, departure_performance_rank AS airport_destination_best_departure_performance_rank
 FROM
 (
-      SELECT origin, dest, DENSE_RANK() OVER (PARTITION BY origin ORDER BY fifteen_minutes_late_percentage ASC) as departure_performance_rank, fifteen_minutes_late_percentage
+      SELECT origin, dest, RANK() OVER (PARTITION BY origin ORDER BY fifteen_minutes_late_percentage, dest) as departure_performance_rank, fifteen_minutes_late_percentage
       FROM
       (
             SELECT origin, dest, ROUND(100.0*SUM(depdel15)/COUNT(*), 2) AS fifteen_minutes_late_percentage
