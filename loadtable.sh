@@ -1,5 +1,6 @@
 sudo chown root:ec2-user -R /wip/answers
 sudo chmod 777 -R /wip/answers
+sudo find /wip/answers/$1/  -name "*" -delete
 sudo rm -rf /wip/answers/$1/*
 sudo mkdir -p /wip/answers/$1/
 sudo chown root:ec2-user -R /wip/answers
