@@ -36,7 +36,7 @@ CREATE EXTERNAL TABLE scrubbed (
   taxiin double,
   crsarrtime string,
   arrtime string,
-  arrdelay double,
+  arrdelay bigint,
   arrdelayminutes double,
   arrdel15 bigint,
   arrivaldelaygroups double,
