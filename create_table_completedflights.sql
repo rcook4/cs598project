@@ -9,7 +9,7 @@ WITH
 ) 
 AS
 SELECT
-       date_parse(flightdate,'%Y-%m-%d') flight_ts
+       date_parse(flightdate,'%Y-%m-%d') as flight_ts
       ,uniquecarrier
       ,flightnum
       ,origin
@@ -27,13 +27,13 @@ SELECT
       ,CAST(depdel15 as TINYINT) as depdel15
       ,CASE
             WHEN crsarrtime='2400'
-            THEN date_add('minute', arrdelay, date_parse(concat(flightdate,'235959'), '%Y-%m-%d%H%i%s'))
-            ELSE date_add('minute', arrdelay, date_parse(concat(flightdate,crsarrtime), '%Y-%m-%d%H%i'))
+            THEN date_parse(concat(flightdate,'235959'), '%Y-%m-%d%H%i%s')
+            ELSE date_parse(concat(flightdate,crsarrtime), '%Y-%m-%d%H%i')
        END as crsarr_ts
       ,CASE
             WHEN crsarrtime='2400'
-            THEN date_parse(concat(flightdate,'235959'), '%Y-%m-%d%H%i%s')
-            ELSE date_parse(concat(flightdate,crsarrtime), '%Y-%m-%d%H%i')
+            THEN date_add('minute', arrdelay, date_parse(concat(flightdate,'235959'), '%Y-%m-%d%H%i%s'))
+            ELSE date_add('minute', arrdelay, date_parse(concat(flightdate,crsarrtime), '%Y-%m-%d%H%i'))
        END as arr_ts
       ,CAST(arrdel15 AS TINYINT) as arrdel15
       ,year
