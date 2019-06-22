@@ -6,7 +6,7 @@ WITH
      external_location = 's3://cs598project/answers/g2q1/'
 ) 
 AS
-SELECT concat(origin, ':', uniquecarrier) AS airport_airline, origin as airport, uniquecarrier as airline, fifteen_minutes_late_percentage, departure_performance_rank AS airport_airline_best_departure_performance_rank
+SELECT origin as airport, uniquecarrier as airline, fifteen_minutes_late_percentage, departure_performance_rank AS airport_airline_best_departure_performance_rank
 FROM
 (
       SELECT origin, uniquecarrier, RANK() OVER (PARTITION BY origin ORDER BY fifteen_minutes_late_percentage ASC) as departure_performance_rank, fifteen_minutes_late_percentage
