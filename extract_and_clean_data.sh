@@ -12,5 +12,5 @@ sudo chown root:ec2-user -R /data/raw >/dev/null 2>&1
 sudo chmod 777 -R /data/raw >/dev/null 2>&1
 sudo find /data/raw/ -name '*.csv' -print0 | xargs -0 -I{} sudo sed -i 's/, /-/g' {} >/dev/null 2>&1
 sudo find /data/raw/ -name '*.csv' -print0 | xargs -0 -I{} sudo sed -i 's/\"//g' {} >/dev/null 2>&1
-aws s3 sync /data/raw s3://cs598project/data/raw/scrubbed >/dev/null
+aws s3 sync /data/raw s3://cs598project/data/raw/scrubbed >/dev/null 2>&1
 echo "end timings... $(date)"
