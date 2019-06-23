@@ -13,4 +13,4 @@ batchcount=`ls -1 2019*.a* 2>/dev/null | wc -l`
 if [ $batchcount -eq 0 ]; then
     sudo find . -type f -name "2019*" -and ! -name "*.gz" -print0 | xargs -0 -I{} sudo cp {} {}.aaaaa
 fi
-sudo find . -type f -name "2019*.a*" -and ! -name "*.json" -print0 | xargs -0 -I{} /wip/answers/loadbatch.sh $1 {}
+sudo find . -type f -name "2019*.a*" -and ! -name "*.json" -print0 | xargs -0 -I{} /wip/loadbatch.sh $1 {}
