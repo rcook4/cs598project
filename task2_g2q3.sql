@@ -5,7 +5,8 @@ CREATE OR REPLACE PUMP "STREAM_PUMP" AS
     SELECT STREAM
          "origin" || '=>' || "dest" AS "flighthop"
         ,"uniquecarrier" AS "airline"
-        ,(1.00-(AVG("arrdel15") OVER (PARTITION BY "origin" || ':' || "dest" || ':' || "uniquecarrier" RANGE INTERVAL '12' HOUR PRECEDING))) AS good_percentage
+        ,AVG(1.0-"arrdel15") AS good_percentage
     FROM "SOURCE_SQL_STREAM_001"
 	WHERE "cancelled" = 0 AND "diverted" = 0
+	GROUP BY "origin", "dest", "uniquecarrier", STEP("SOURCE_SQL_STREAM_001".ROWTIME BY INTERVAL '1' HOUR)
 ;
